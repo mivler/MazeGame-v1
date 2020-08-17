@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Maze Game</title>
+</head>
+
+<body>
+
+        <div class="pre-game">
+            <img class = "character-icon" src="favicon (3).ico" alt="Character">
+            <form>
+                <label>How many rooms in your maze?</label>
+                <br>
+                <input class = "rooms" type = "text">
+                <br>
+                <input id = "submitter" type = "button" value = "Ready Player One">
+            </form>
+            <p>Rules:</p>
+            <ul>
+                <li>
+                    Use arrow keys to move through the Maze
+                </li>
+                <li>
+                    If you end up in a dead end, you will be sent back to the start
+                </li>
+                <li>
+                    The final room will be room number (how many rooms you choose)
+                </li>
+                <li>
+                    There is only one penultimate room.
+                </li>
+            </ul>
+        </div>
+
+        <div class = "game">
+            <div class = "top-part">
+                <div class = "up-door">
+                    <img class="door-icon" src="DoorIcon.ico" alt="door">
+                </div>
+            </div>
+
+            <div class = "text-section">
+                <h2 class = "room-identifier">Current Room: 0</h2>
+            </div>
+            <div class = "mid-part">
+                <div class = "left-door">
+                    <img class = "door-icon" src="DoorIcon.ico" alt="door">
+                </div>
+                <div class = "character-box">
+                    <img class = "character-icon" src="favicon (3).ico" alt="Character">
+                </div>
+                <div class = "right-door">
+                   <img class = "door-icon" src="DoorIcon.ico" alt="door">
+                </div>
+            </div>
+            <div class = "bottom-part">
+                <div class= "down-door">
+                    <img class = "door-icon" src="DoorIcon.ico" alt="door">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class = "bottom-container">
+
+
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
