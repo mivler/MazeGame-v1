@@ -51,6 +51,9 @@ $("#submitter").click(function() {
             var penultimate = Math.floor(Math.random() * numRooms);
             roomArray[penultimate].roomsAdjacent[Math.floor(Math.random() * 4)] = numRooms;
             validMap = validMapCheck();
+            for (room of roomArray) {
+                validMap = validMap && !badRoom(room); 
+            }
             console.log(validMap);
         }
         gameStart();
