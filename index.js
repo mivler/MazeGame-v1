@@ -2,14 +2,24 @@ var roomArray = [];
 var directionArray = ["up", "right", "down", "left"];
 var currentRoom;
 var mapSet = false;
+var firstPlay = true;
 
-function Room(room, roomsTo, deadEnd) {
+function Room(room, roomsTo) {
     // roomsTo [0] = up; [1] = right; [2] = down; [3] = left;
     this.winningRoom = false;
     this.roomIndex = room;
     this.roomsAdjacent = roomsTo;
-    this.deadEnd = deadEnd;
 }
+
+
+$(".restart").click( function() {
+    $(".pre-game").css("display", "block");
+    $(".game").css("display", "none");
+    $(".restart").css("display", "none");
+    mapSet = false;
+    firstPlay = false;
+    
+});
 
 
 $("#submitter").click(function() {
@@ -27,16 +37,16 @@ $("#submitter").click(function() {
                 let roomsTo = roomNumGenerator(numRooms);
                 let deadEnd = Math.floor(Math.random() * 9);
                 if (deadEnd == 0) {
-                    roomArray.push(new Room(i,[end, end, end, end], true));
+                    roomArray.push(new Room(i, [end, end, end, end]));
                 } else {
                     let up = roomsTo[0];
                     let right = roomsTo[1];
                     let down = roomsTo[2];
                     let left = roomsTo[3];
-                    roomArray.push(new Room(i, [up, right, down, left], false));
+                    roomArray.push(new Room(i, [up, right, down, left]));
                 }
             }
-            roomArray.push(new Room(numRooms, [end, end, end, end], true));
+            roomArray.push(new Room(numRooms, [end, end, end, end]));
             roomArray[numRooms].winningRoom = true;
             var penultimate = Math.floor(Math.random() * numRooms);
             roomArray[penultimate].roomsAdjacent[Math.floor(Math.random() * 4)] = numRooms;
@@ -113,11 +123,12 @@ function attachArrowKeys() {
 
 function gameStart() {
     mapSet = true;
-    attachArrowKeys();
+    if (firstPlay) {
+        attachArrowKeys();
+    }
 
     currentRoom = roomArray[0];
     console.log(currentRoom);
-
     $(".room-identifier").text("Current Room: 0");
     $(".pre-game").css("display", "none");
     $(".game").css("display", "block");
@@ -138,14 +149,14 @@ function changeRoom(newRoom) {
         if (currentRoom.winningRoom) {
            win();
 
-        } else if (currentRoom.deadEnd) {
+        } else if (averageRoomNum(currentRoom) == roomArray.length) {
             deadEnd();
 
         } else {
             console.log(currentRoom);
             let annouceRoom = "Current Room: " + currentRoom.roomIndex;
             $(".room-identifier").text(annouceRoom);
-            doorHider(currentRoom);
+            doorHider();
         }
         
     } else {
@@ -158,15 +169,17 @@ function changeRoom(newRoom) {
 
 function win() {
     $(".room-identifier").text("YOU WIN!!!");
+    doorHider(currentRoom);
     var winSound = new Audio("sound_effects/win_game_sound.mp3");
-    winSound.play()
+    winSound.play();
+    $(".restart").css("display", "block");
 }
 
 
 function deadEnd() {
     let annouceRoom = "Current Room: " + currentRoom.roomIndex;
     $(".room-identifier").text(annouceRoom);
-    doorHider(currentRoom);
+    doorHider();
     var loseSound = new Audio("sound_effects/lose_game_sound.mp3");
     loseSound.play();
     setTimeout(changeRoom, 2000, 0);
@@ -174,7 +187,7 @@ function deadEnd() {
 
 
 
-function doorHider(currentRoom) {
+function doorHider() {
     for (var i = 0; i < 4; i++) {
         let className = "." + directionArray[i] + "-door";
         if ( $(className)[0].classList.contains("hidden-door") ) {
@@ -193,4 +206,28 @@ function getNumRooms() {
 
     }
 
+}
+
+
+function averageRoomNum(someRoom) {
+    let sum = 0;
+    for (room of someRoom.roomsAdjacent) {
+        sum = sum + room;
+    }
+    return sum/someRoom.roomsAdjacent.length;
+}
+
+
+function badRoom(someRoom) {
+    let onlyToSelf = true
+    if (averageRoomNum(someRoom) == roomArray.length) {
+        return !onlyToSelf;
+    } else {
+        for (room of someRoom.roomsAdjacent) {
+            if (room != someRoom.roomIndex && room != roomArray.length) {
+                return !onlyToSelf;
+            }
+        }
+        return onlyToSelf;
+    }
 }
